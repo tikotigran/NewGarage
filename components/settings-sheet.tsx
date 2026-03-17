@@ -16,6 +16,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
@@ -156,6 +157,9 @@ export function SettingsSheet({
       <DialogContent className="max-w-[95vw] sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('dialog.settings', language)}</DialogTitle>
+          <DialogDescription className="sr-only">
+            {t('dialog.settings', language)}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -388,6 +392,9 @@ export function SettingsSheet({
                   <AlertTriangle className="w-5 h-5" />
                   {t('settings.resetConfirmTitle', language)}
                 </DialogTitle>
+                <DialogDescription className="sr-only">
+                  {t('settings.resetGarageDesc', language)}
+                </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <p className="text-sm text-muted-foreground">
