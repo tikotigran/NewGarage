@@ -375,7 +375,7 @@ export function SettingsSheet({
                   <AlertTriangle className="w-5 h-5" />
                   {t('settings.resetConfirmTitle', language)}
                 </DialogTitle>
-                <DialogDescription className="sr-only">
+                <DialogDescription>
                   {t('settings.resetGarageDesc', language)}
                 </DialogDescription>
               </DialogHeader>

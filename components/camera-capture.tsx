@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from 'react'
 import { Camera, X, RotateCw, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import type { Document, Car } from '@/lib/types'
@@ -238,6 +238,9 @@ export function CameraCapture({ open, onClose, car, onCapture, language = 'ru' }
       <DialogContent className="sm:max-w-[95vw] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>📸 Сделать фото документа</DialogTitle>
+          <DialogDescription>
+            Сделайте фото документа для вашей машины
+          </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">

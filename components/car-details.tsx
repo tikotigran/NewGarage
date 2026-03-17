@@ -642,7 +642,10 @@ export function CarDetails({
               {car.status === 'sold' ? t('dialog.editSale', language) : t('dialog.sellCar', language)}
             </DialogTitle>
             <DialogDescription>
-              {t('dialog.sellCarDesc', language)}
+              {car.status === 'sold' 
+                ? 'Измените информацию о продаже автомобиля' 
+                : 'Введите информацию о продаже автомобиля'
+              }
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -699,7 +702,7 @@ export function CarDetails({
           <DialogHeader>
             <DialogTitle>{t('dialog.editExpense', language)}</DialogTitle>
             <DialogDescription>
-              {t('dialog.editExpenseDesc', language)}
+              Измените информацию о расходе
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
