@@ -47,7 +47,6 @@ interface SettingsSheetProps {
   onUpdateLanguage: (language: 'ru' | 'fr' | 'hy' | 'en') => void
   onUpdateTheme: (theme: 'light' | 'dark' | 'system') => void
   onResetGarage?: () => void
-  verifyPassword?: (password: string) => Promise<boolean>
 }
 
 export function SettingsSheet({
@@ -66,7 +65,6 @@ export function SettingsSheet({
   onUpdateLanguage,
   onUpdateTheme,
   onResetGarage,
-  verifyPassword,
 }: SettingsSheetProps) {
   const [newPartnerName, setNewPartnerName] = useState('')
   const [tempCurrency, setTempCurrency] = useState(currency)
@@ -75,7 +73,8 @@ export function SettingsSheet({
   const [showResetDialog, setShowResetDialog] = useState(false)
   const [resetPassword, setResetPassword] = useState('')
   const [resetError, setResetError] = useState('')
-  const [isVerifying, setIsVerifying] = useState(false)
+
+  const RESET_PASSWORD = 'garage2024'
 
   useEffect(() => {
     if (open) {
@@ -106,30 +105,15 @@ export function SettingsSheet({
     setEditingPartnerName('')
   }
 
-  const handleResetGarage = async () => {
-    if (!verifyPassword) {
+  const handleResetGarage = () => {
+    if (resetPassword !== RESET_PASSWORD) {
       setResetError(t('settings.resetPasswordError', language))
       return
     }
-    
-    setIsVerifying(true)
+    onResetGarage?.()
+    setShowResetDialog(false)
+    setResetPassword('')
     setResetError('')
-    
-    try {
-      const isValid = await verifyPassword(resetPassword)
-      if (!isValid) {
-        setResetError(t('settings.resetPasswordError', language))
-        return
-      }
-      onResetGarage?.()
-      setShowResetDialog(false)
-      setResetPassword('')
-      setResetError('')
-    } catch {
-      setResetError(t('settings.resetPasswordError', language))
-    } finally {
-      setIsVerifying(false)
-    }
   }
 
   const handleOpenResetDialog = () => {
@@ -346,10 +330,10 @@ export function SettingsSheet({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="ru">🇷🇺 Русский</SelectItem>
-                    <SelectItem value="en">🇬🇧 English</SelectItem>
-                    <SelectItem value="fr">🇫🇷 Français</SelectItem>
-                    <SelectItem value="hy">🇦🇲 Հայերեն</SelectItem>
+                    <SelectItem value="ru">Русский</SelectItem>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="fr">Francais</SelectItem>
+                    <SelectItem value="hy">Hayeren</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -361,10 +345,10 @@ export function SettingsSheet({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="€">€ EUR</SelectItem>
-                    <SelectItem value="$">$ USD</SelectItem>
-                    <SelectItem value="₽">₽ RUB</SelectItem>
-                    <SelectItem value="£">£ GBP</SelectItem>
+                    <SelectItem value="€">EUR</SelectItem>
+                    <SelectItem value="$">USD</SelectItem>
+                    <SelectItem value="₽">RUB</SelectItem>
+                    <SelectItem value="£">GBP</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -384,7 +368,6 @@ export function SettingsSheet({
             </div>
           )}
 
-          {/* Диалог подтверждения сброса */}
           <Dialog open={showResetDialog} onOpenChange={setShowResetDialog}>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
@@ -428,9 +411,8 @@ export function SettingsSheet({
                     variant="destructive"
                     className="flex-1"
                     onClick={handleResetGarage}
-                    disabled={isVerifying || !resetPassword}
                   >
-                    {isVerifying ? '...' : t('settings.resetGarageButton', language)}
+                    {t('settings.resetGarageButton', language)}
                   </Button>
                 </div>
               </div>

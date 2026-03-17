@@ -26,7 +26,7 @@ type FilterType = 'all' | 'active' | 'sold'
 type SortType = 'default' | 'date-desc' | 'date-asc' | 'name-asc' | 'name-desc'
 
 export default function Home() {
-  const { user, loading: authLoading, error: authError, login, register, logout, verifyPassword } = useAuth()
+  const { user, loading: authLoading, error: authError, login, register, logout } = useAuth()
   const {
     state,
     isLoaded,
@@ -352,7 +352,6 @@ export default function Home() {
         onUpdateLanguage={updateLanguage}
         onUpdateTheme={updateTheme}
         onResetGarage={resetGarage}
-verifyPassword={verifyPassword}
       />
     </div>
   )
