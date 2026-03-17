@@ -350,12 +350,12 @@ export function useAppStore(userId?: string | null) {
       const carRef = doc(db, 'users', userId, 'cars', newCar.id)
       const carData = { ...newCar }
       
-      // Remove undefined fields
-      if (carData.licensePlate === undefined) delete carData.licensePlate
-      if (carData.salePrice === undefined) delete carData.salePrice
-      if (carData.saleDate === undefined) delete carData.saleDate
-      if (carData.partnerShares === undefined) delete carData.partnerShares
-      if (carData.deleted === undefined) delete carData.deleted
+      // Remove undefined fields - Firestore doesn't accept undefined values
+      Object.keys(carData).forEach(key => {
+        if ((carData as any)[key] === undefined) {
+          delete (carData as any)[key]
+        }
+      })
       
       setDoc(carRef, carData, { merge: true })
         .then(() => {
@@ -401,12 +401,12 @@ export function useAppStore(userId?: string | null) {
           const carRef = doc(db, 'users', userId, 'cars', carId)
           const carData = { ...updatedCar, lastModified: new Date().toISOString() }
           
-          // Remove undefined fields
-          if (carData.licensePlate === undefined) delete carData.licensePlate
-          if (carData.salePrice === undefined) delete carData.salePrice
-          if (carData.saleDate === undefined) delete carData.saleDate
-          if (carData.partnerShares === undefined) delete carData.partnerShares
-          if (carData.deleted === undefined) delete carData.deleted
+          // Remove undefined fields - Firestore doesn't accept undefined values
+          Object.keys(carData).forEach(key => {
+            if ((carData as any)[key] === undefined) {
+              delete (carData as any)[key]
+            }
+          })
           
           // Save immediately without waiting for auto-save
           setDoc(carRef, carData, { merge: true })
