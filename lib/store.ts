@@ -424,6 +424,7 @@ export function useAppStore(userId?: string | null) {
 
   const deleteCar = useCallback((carId: string) => {
     console.log('[store] deleteCar called for car:', carId)
+    console.log('[store] WARNING: This deletes individual car, not all cars!')
     
     // Update state first
     setState((prev) => ({
@@ -674,18 +675,26 @@ export function useAppStore(userId?: string | null) {
 
   const resetGarage = useCallback(async () => {
     console.log('[store] Resetting garage - keeping cars, deleting documents only')
+    console.log('[store] Current cars count:', state.cars.length)
+    console.log('[store] Current cars:', state.cars.map(c => ({ id: c.id, name: c.name })))
     
     // Delete all documents from Firebase (but keep cars)
     if (userId && db) {
+      console.log('[store] Starting documents deletion...')
       const documentsRef = collection(db, 'users', userId, 'documents')
       const documentsSnap = await getDocs(documentsRef)
+      console.log('[store] Found documents to delete:', documentsSnap.docs.length)
+      
       const batch = writeBatch(db)
       documentsSnap.forEach((docDoc) => {
+        console.log('[store] Deleting document:', docDoc.id)
         batch.delete(doc(documentsRef, docDoc.id))
       })
       
       await batch.commit()
       console.log('[store] Documents deleted from Firestore, cars preserved')
+    } else {
+      console.log('[store] No userId or db, skipping Firebase deletion')
     }
     
     // Reset local state but preserve cars
