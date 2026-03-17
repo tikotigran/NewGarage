@@ -104,6 +104,10 @@ function saveStateToLocal(state: AppState) {
 
 const loadStateFromFirestore = async (userId: string): Promise<AppState | null> => {
   try {
+    if (!db) {
+      console.log('[store] Firestore not initialized')
+      return null
+    }
     console.log('[store] Starting loadStateFromFirestore for user:', userId)
     
     // Load settings
@@ -154,6 +158,7 @@ const loadStateFromFirestore = async (userId: string): Promise<AppState | null> 
 
 async function saveCarsToNewStructure(userId: string, cars: Car[]) {
   try {
+    if (!db) return
     console.log('[store] Migrating cars to new structure...')
     const batch = writeBatch(db)
     const carsRef = collection(db, 'users', userId, 'cars')
@@ -190,6 +195,7 @@ async function saveCarsToNewStructure(userId: string, cars: Car[]) {
 
 async function saveStateToNewStructure(userId: string, state: AppState) {
   try {
+    if (!db) return
     console.log('[store] Migrating state to new structure...')
     
     // Save settings
@@ -214,6 +220,7 @@ async function saveStateToNewStructure(userId: string, state: AppState) {
 
 async function saveStateToFirestore(userId: string, state: AppState) {
   try {
+    if (!db) return
     console.log('[store] Starting save to Firestore for user', userId)
     
     // Save settings
@@ -305,7 +312,7 @@ export function useAppStore(userId?: string | null) {
   }, [state, isLoaded])
 
   useEffect(() => {
-    if (!isLoaded || !userId) return
+    if (!isLoaded || !userId || !db) return
     // Only save settings automatically, not cars (cars are saved individually)
     console.log('[store] Auto-save effect triggered, but only saving settings')
     console.log('[store] Current cars count:', state.cars.length)
@@ -339,7 +346,7 @@ export function useAppStore(userId?: string | null) {
     console.log('[store] New car created:', newCar)
     
     // Save to Firebase immediately
-    if (userId) {
+    if (userId && db) {
       const carRef = doc(db, 'users', userId, 'cars', newCar.id)
       const carData = { ...newCar }
       
@@ -388,7 +395,7 @@ export function useAppStore(userId?: string | null) {
       )
       
       // Save to Firebase immediately to avoid race condition
-      if (userId) {
+      if (userId && db) {
         const updatedCar = updatedCars.find(car => car.id === carId)
         if (updatedCar) {
           const carRef = doc(db, 'users', userId, 'cars', carId)
@@ -425,7 +432,7 @@ export function useAppStore(userId?: string | null) {
     }))
     
     // Delete from Firebase immediately
-    if (userId) {
+    if (userId && db) {
       const carRef = doc(db, 'users', userId, 'cars', carId)
       // Delete document completely
       deleteDoc(carRef)
@@ -622,7 +629,7 @@ export function useAppStore(userId?: string | null) {
     })
 
     // Save to Firebase immediately
-    if (userId) {
+    if (userId && db) {
       console.log('[store] Saving to Firebase...')
       const docRef = doc(db, 'users', userId, 'documents', newDocument.id)
       setDoc(docRef, newDocument)
@@ -647,7 +654,7 @@ export function useAppStore(userId?: string | null) {
     }))
 
     // Delete from Firebase immediately
-    if (userId) {
+    if (userId && db) {
       const docRef = doc(db, 'users', userId, 'documents', documentId)
       deleteDoc(docRef)
         .then(() => console.log('[store] Document deleted from Firestore:', documentId))
@@ -669,7 +676,7 @@ export function useAppStore(userId?: string | null) {
     console.log('[store] Resetting garage - deleting all data')
     
     // Delete all cars from Firebase
-    if (userId) {
+    if (userId && db) {
       const carsRef = collection(db, 'users', userId, 'cars')
       const carsSnap = await getDocs(carsRef)
       const batch = writeBatch(db)
