@@ -16,6 +16,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
@@ -105,10 +106,6 @@ export function SettingsSheet({
   }
 
   const handleResetGarage = () => {
-    console.log('[settings] User entered password:', resetPassword)
-    console.log('[settings] Expected password:', RESET_PASSWORD)
-    console.log('[settings] Passwords match:', resetPassword === RESET_PASSWORD)
-    
     if (resetPassword !== RESET_PASSWORD) {
       setResetError(t('settings.resetPasswordError', language))
       return
@@ -144,6 +141,9 @@ export function SettingsSheet({
       <DialogContent className="max-w-[95vw] sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('dialog.settings', language)}</DialogTitle>
+          <DialogDescription className="sr-only">
+            {t('dialog.settings', language)}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -330,10 +330,10 @@ export function SettingsSheet({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="ru">🇷🇺 Русский</SelectItem>
-                    <SelectItem value="en">🇬🇧 English</SelectItem>
-                    <SelectItem value="fr">🇫🇷 Français</SelectItem>
-                    <SelectItem value="hy">🇦🇲 Հայերեն</SelectItem>
+                    <SelectItem value="ru">Русский</SelectItem>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="fr">Francais</SelectItem>
+                    <SelectItem value="hy">Hayeren</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -345,10 +345,10 @@ export function SettingsSheet({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="€">€ EUR</SelectItem>
-                    <SelectItem value="$">$ USD</SelectItem>
-                    <SelectItem value="₽">₽ RUB</SelectItem>
-                    <SelectItem value="£">£ GBP</SelectItem>
+                    <SelectItem value="€">EUR</SelectItem>
+                    <SelectItem value="$">USD</SelectItem>
+                    <SelectItem value="₽">RUB</SelectItem>
+                    <SelectItem value="£">GBP</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -368,7 +368,6 @@ export function SettingsSheet({
             </div>
           )}
 
-          {/* Диалог подтверждения сброса */}
           <Dialog open={showResetDialog} onOpenChange={setShowResetDialog}>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
@@ -376,6 +375,9 @@ export function SettingsSheet({
                   <AlertTriangle className="w-5 h-5" />
                   {t('settings.resetConfirmTitle', language)}
                 </DialogTitle>
+                <DialogDescription className="sr-only">
+                  {t('settings.resetGarageDesc', language)}
+                </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <p className="text-sm text-muted-foreground">
