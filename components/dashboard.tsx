@@ -26,13 +26,13 @@ export function Dashboard({ cars, currency, language = 'ru' }: DashboardProps) {
       status: car.status,
       purchasePrice: car.purchasePrice,
       salePrice: car.salePrice,
-      expensesCount: car.expenses.length
+      expensesCount: Array.isArray(car.expenses) ? car.expenses.length : 0
     }))
   })
   
   // Финансовые показатели - только по проданным машинам
   const soldCarsData = soldCars.map(car => {
-    const expenses = car.expenses.reduce((eSum, e) => eSum + (e.amount || 0), 0)
+    const expenses = Array.isArray(car.expenses) ? car.expenses.reduce((eSum, e) => eSum + (e.amount || 0), 0) : 0
     const purchasePrice = car.purchasePrice || 0
     const invested = purchasePrice + expenses
     const profit = (car.salePrice || 0) - invested
@@ -81,7 +81,7 @@ export function Dashboard({ cars, currency, language = 'ru' }: DashboardProps) {
 
   // Расчет инвестиций в активные машины
   const activeCarsInvested = activeCars.reduce((sum, car) => {
-    const expenses = car.expenses.reduce((eSum, e) => eSum + (e.amount || 0), 0)
+    const expenses = Array.isArray(car.expenses) ? car.expenses.reduce((eSum, e) => eSum + (e.amount || 0), 0) : 0
     const purchasePrice = car.purchasePrice || 0
     return sum + purchasePrice + expenses
   }, 0)

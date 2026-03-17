@@ -23,7 +23,7 @@ interface CarCardProps {
 export function CarCard({ car, currency, language = 'ru', onClick, onEdit, showLicensePlate = true, showPurchaseDate = true, showKm = true, showYear = true }: CarCardProps) {
   const [pressTimer, setPressTimer] = useState<NodeJS.Timeout | null>(null)
   const [isLongPress, setIsLongPress] = useState(false)
-  const totalExpenses = car.expenses.reduce((sum, e) => sum + e.amount, 0)
+  const totalExpenses = Array.isArray(car.expenses) ? car.expenses.reduce((sum, e) => sum + e.amount, 0) : 0
   const totalInvested = (car.purchasePrice || 0) + totalExpenses
   const profit = car.salePrice ? car.salePrice - totalInvested : 0
   const isProfitable = profit > 0

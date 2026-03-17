@@ -17,7 +17,7 @@ export function DebugPanel({ cars, currency }: DebugPanelProps) {
 
   // Подробный расчет
   const calculations = cars.map(car => {
-    const expenses = car.expenses.reduce((sum, e) => sum + (e.amount || 0), 0)
+    const expenses = Array.isArray(car.expenses) ? car.expenses.reduce((sum, e) => sum + (e.amount || 0), 0) : 0
     const purchasePrice = car.purchasePrice || 0
     const salePrice = car.salePrice || 0
     const invested = purchasePrice + expenses

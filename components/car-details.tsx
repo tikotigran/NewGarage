@@ -128,7 +128,7 @@ export function CarDetails({
     setEditingExpense(null)
   }
 
-  const totalExpenses = car.expenses.reduce((sum, e) => sum + e.amount, 0)
+  const totalExpenses = Array.isArray(car.expenses) ? car.expenses.reduce((sum, e) => sum + e.amount, 0) : 0
   const totalInvested = (car.purchasePrice || 0) + totalExpenses
   const profit = car.salePrice ? car.salePrice - totalInvested : 0
   const isProfitable = profit > 0
@@ -138,12 +138,12 @@ export function CarDetails({
   }
 
   // Filter expenses based on selected tab
-  const filteredExpenses = car.expenses
+  const filteredExpenses = Array.isArray(car.expenses) ? car.expenses
     .filter((expense) => {
       if (expenseFilter === 'all') return true
       return expense.paidBy === expenseFilter
     })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) : []
 
   // Get partners involved in this car (for partnership cars)
   const involvedPartners = car.isPartnership && car.partnerShares
@@ -289,7 +289,7 @@ export function CarDetails({
           <CardHeader className="pb-0">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className={`grid w-full ${showDocuments ? 'grid-cols-3' : 'grid-cols-2'}`}>
-                <TabsTrigger value="expenses">{t('label.expenses', language)} ({car.expenses.length})</TabsTrigger>
+                <TabsTrigger value="expenses">{t('label.expenses', language)} ({Array.isArray(car.expenses) ? car.expenses.length : 0})</TabsTrigger>
                 {showDocuments && (
                   <TabsTrigger value="documents">{t('label.documents', language)} ({documents.filter(d => d.carId === car.id).length})</TabsTrigger>
                 )}

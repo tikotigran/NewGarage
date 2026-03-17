@@ -16,13 +16,13 @@ export function StatsSummary({ cars, currency, language = 'ru' as const }: Stats
   const activeCars = cars.filter((c) => c.status === 'active')
 
   const totalProfit = soldCars.reduce((sum, car) => {
-    const expenses = car.expenses.reduce((s, e) => s + (e.amount || 0), 0)
+    const expenses = Array.isArray(car.expenses) ? car.expenses.reduce((s, e) => s + (e.amount || 0), 0) : 0
     const invested = (car.purchasePrice || 0) + expenses
     return sum + ((car.salePrice || 0) - invested)
   }, 0)
 
   const totalInvested = activeCars.reduce((sum, car) => {
-    const expenses = car.expenses.reduce((s, e) => s + (e.amount || 0), 0)
+    const expenses = Array.isArray(car.expenses) ? car.expenses.reduce((s, e) => s + (e.amount || 0), 0) : 0
     return sum + (car.purchasePrice || 0) + expenses
   }, 0)
 
