@@ -46,6 +46,7 @@ interface SettingsSheetProps {
   onUpdateLanguage: (language: 'ru' | 'fr' | 'hy' | 'en') => void
   onUpdateTheme: (theme: 'light' | 'dark' | 'system') => void
   onResetGarage?: () => void
+  verifyPassword?: (password: string) => Promise<boolean>
 }
 
 export function SettingsSheet({
@@ -64,6 +65,7 @@ export function SettingsSheet({
   onUpdateLanguage,
   onUpdateTheme,
   onResetGarage,
+  verifyPassword,
 }: SettingsSheetProps) {
   const [newPartnerName, setNewPartnerName] = useState('')
   const [tempCurrency, setTempCurrency] = useState(currency)
@@ -72,8 +74,7 @@ export function SettingsSheet({
   const [showResetDialog, setShowResetDialog] = useState(false)
   const [resetPassword, setResetPassword] = useState('')
   const [resetError, setResetError] = useState('')
-
-  const RESET_PASSWORD = 'garage2024'
+  const [isVerifying, setIsVerifying] = useState(false)
 
   useEffect(() => {
     if (open) {
@@ -104,19 +105,30 @@ export function SettingsSheet({
     setEditingPartnerName('')
   }
 
-  const handleResetGarage = () => {
-    console.log('[settings] User entered password:', resetPassword)
-    console.log('[settings] Expected password:', RESET_PASSWORD)
-    console.log('[settings] Passwords match:', resetPassword === RESET_PASSWORD)
-    
-    if (resetPassword !== RESET_PASSWORD) {
+  const handleResetGarage = async () => {
+    if (!verifyPassword) {
       setResetError(t('settings.resetPasswordError', language))
       return
     }
-    onResetGarage?.()
-    setShowResetDialog(false)
-    setResetPassword('')
+    
+    setIsVerifying(true)
     setResetError('')
+    
+    try {
+      const isValid = await verifyPassword(resetPassword)
+      if (!isValid) {
+        setResetError(t('settings.resetPasswordError', language))
+        return
+      }
+      onResetGarage?.()
+      setShowResetDialog(false)
+      setResetPassword('')
+      setResetError('')
+    } catch {
+      setResetError(t('settings.resetPasswordError', language))
+    } finally {
+      setIsVerifying(false)
+    }
   }
 
   const handleOpenResetDialog = () => {
@@ -409,8 +421,9 @@ export function SettingsSheet({
                     variant="destructive"
                     className="flex-1"
                     onClick={handleResetGarage}
+                    disabled={isVerifying || !resetPassword}
                   >
-                    {t('settings.resetGarageButton', language)}
+                    {isVerifying ? '...' : t('settings.resetGarageButton', language)}
                   </Button>
                 </div>
               </div>
