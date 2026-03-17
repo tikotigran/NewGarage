@@ -146,7 +146,7 @@ export function CarCard({ car, currency, language = 'ru', onClick, onEdit, showL
         
         {totalInvested > 0 && (
           <div className="flex justify-between text-sm font-medium pt-2 border-t">
-            <span>{t('stats.total', language)}:</span>
+            <span>{t('label.total', language)}:</span>
             <span>{formatCurrency(totalInvested, currency)}</span>
           </div>
         )}
