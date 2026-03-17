@@ -9,6 +9,7 @@ import { Switch } from '@/components/ui/switch'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
@@ -122,6 +123,9 @@ export function EditCarForm({ open, onOpenChange, car, partners, onUpdate, onAdd
       <DialogContent className="max-w-[95vw] sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader className="px-6 pt-6 pb-2">
           <DialogTitle>{t('dialog.editSale', language)}</DialogTitle>
+          <DialogDescription className="sr-only">
+            {t('dialog.editSale', language)}
+          </DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="max-h-[calc(85vh-100px)]">

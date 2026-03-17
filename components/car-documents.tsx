@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { CameraCapture } from '@/components/camera-capture'
 import type { Document, Car } from '@/lib/types'
 import { formatDate, formatFileSize } from '@/lib/format'
@@ -219,6 +219,9 @@ export function CarDocuments({ car, documents, onAddDocument, onDeleteDocument, 
                         <DialogContent className="max-w-6xl w-full h-[90vh] p-0 flex flex-col">
                           <DialogHeader className="p-4 pb-0 shrink-0">
                             <DialogTitle>{doc.name}</DialogTitle>
+                            <DialogDescription className="sr-only">
+                              {doc.name}
+                            </DialogDescription>
                           </DialogHeader>
                           
                           {/* Информация о документе */}
