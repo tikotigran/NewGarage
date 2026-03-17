@@ -673,31 +673,25 @@ export function useAppStore(userId?: string | null) {
   }, [])
 
   const resetGarage = useCallback(async () => {
-    console.log('[store] Resetting garage - deleting all data')
+    console.log('[store] Resetting garage - keeping cars, deleting documents only')
     
-    // Delete all cars from Firebase
+    // Delete all documents from Firebase (but keep cars)
     if (userId && db) {
-      const carsRef = collection(db, 'users', userId, 'cars')
-      const carsSnap = await getDocs(carsRef)
-      const batch = writeBatch(db)
-      carsSnap.forEach((carDoc) => {
-        batch.delete(doc(carsRef, carDoc.id))
-      })
-      
-      // Delete all documents from Firebase
       const documentsRef = collection(db, 'users', userId, 'documents')
       const documentsSnap = await getDocs(documentsRef)
+      const batch = writeBatch(db)
       documentsSnap.forEach((docDoc) => {
         batch.delete(doc(documentsRef, docDoc.id))
       })
       
       await batch.commit()
-      console.log('[store] All data deleted from Firestore')
+      console.log('[store] Documents deleted from Firestore, cars preserved')
     }
     
-    // Reset local state to default
+    // Reset local state but preserve cars
     setState({
       ...defaultState,
+      cars: state.cars, // Keep existing cars
       settings: {
         ...defaultState.settings,
         // Keep current user settings
