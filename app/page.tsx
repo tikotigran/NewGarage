@@ -294,10 +294,6 @@ export default function Home() {
           </>
         )}
 
-        {/* Пустое состояние */}
-        {state.cars.length === 0 && !showDashboard && (
-          <EmptyState language={state.settings.language} />
-        )}
       </main>
 
       {/* Floating Action Button */}
